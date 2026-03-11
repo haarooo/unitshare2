@@ -1,6 +1,7 @@
 package org.example.unitshare2.service;
 
 import org.example.unitshare2.dto.UserDto;
+import org.example.unitshare2.entity.UserEntity;
 import org.example.unitshare2.repository.UserRepository;
 import org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +29,56 @@ public class UserService {
                 return findId.get().toDto();
             }
         }
+ㅋ
+
+    // ******************************************* 소영  *****************************************
+    // 회원가입
+    public boolean join( UserDto userDto ){
+        // 1] dto --> entity 변환
+        UserEntity userEntity = userDto.toEntity();
+        // 2] JPA save 이용하여 insert 하기
+        UserEntity saved = userRepository.save( userEntity );
+        // 3] 저장 성공 여부 반환 (PK인 uno가 0보다 크면 성공)
+        return saved.getUno() > 0;
+    }
+
+    // 아이디 중복 체크
+    public boolean checkId(String id){
+        List<UserEntity> userEntityList = userRepository.findAll();
+        // 검사만 하니까 DTO XX
+        for( int index = 0 ; index <= userEntityList.size()-1 ; index++ ){
+            if(userEntityList.get(index).equals(id)){
+                return true;
+            }
+        }
+//        userEntityList.forEach(entity -> {
+//            if (entity.getId().equals(id)){
+//                return true;
+//            }
+//        });
+        return false;
+    }
+
+    // 전화번호 중복 체크
+    public boolean checkPhone(String phone){
+        List<UserEntity> userEntityList = userRepository.findAll();
+        for(int index = 0 ; index <= userEntityList.size()-1 ; index++ ){
+            if(userEntityList.get(index).equals(phone)){
+                return true;
+            }
+        }
+        //        userEntityList.forEach(entity -> {
+//            if (entity.getPhone().equals(phone)){
+//                return true;
+//            }
+//        });
+        return false;
+     }
+    }
+    // ***************************************************************************************
+
+
+
     // 02 end // 0213 수정
 
     // 03. 비밀번호 찾기 Dao
@@ -39,45 +91,11 @@ public class UserService {
 
 
     }
-    // 04. 회원가입 Dao
-    private int currentUno = 1; // 0211 수정
-    public boolean signup(String id, String pwd, String name, String phone ) {
-       try{ String sql = "insert into user(id, pwd, name, phone) values(?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
-            ps.setString(2, pwd);
-            ps.setString(3, name);
-            ps.setString(4, phone);
-            int count = ps.executeUpdate();
-           if( count == 1 ){ return true; }
-           else{ return false; }
-        } catch (SQLException e) {System.out.println("[시스템오류] 회원가입 SQL 실행 중 실패 : " + e);}
-            return false;
-        }
-    // 04 end
-    // 01-1. 아이디 중복 사용 여부 dao             //  0219 수정
-    public boolean checkId(String id){
-        String sql = "select * from user where id = ?";
-        try{
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return true;
-        } catch (Exception e) { System.out.println("[경고] 해당 아이디는 사용이 불가합니다" + e);}
-        return false;
-    }// 01-1 end
 
-    // 01-2. 전화번호 중복 사용 여부 dao
-    public boolean checkPhone(String phone) {
-        String sql = "select * from user where phone = ?";
-        try{
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, phone);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return true;
-        } catch (Exception e) { System.out.println("[경고] 해당 번호는 사용 불가합니다." + e);}
-        return false;
-    }    // 01-2 end
+
+
+
+
 
     // 로그인(현재 정보와 기존 정보를 비교)
 

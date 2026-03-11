@@ -1,5 +1,8 @@
 package org.example.unitshare2.dto;
 
+import org.example.unitshare2.entity.UserEntity;
+
+
 public class UserDto {
    private int uno;
    private String id;
@@ -47,5 +50,15 @@ public class UserDto {
               ", name='" + name + '\'' +
               ", point=" + point +
               '}';
+   }
+
+   public UserEntity toEntity(){
+      return UserEntity.builder()
+              .id(this.id)
+              .pwd(this.pwd)
+              .phone(this.phone)
+              .name(this.name)
+              .point(this.point)
+              .build();
    }
 }

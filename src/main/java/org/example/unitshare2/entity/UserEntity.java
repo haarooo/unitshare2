@@ -19,7 +19,7 @@ public class UserEntity extends BaseTime{
 
 
     @Column(nullable = false,unique = true,length = 20)
-    private Integer Id;
+    private String id;
 
     @Column(nullable = false,length = 15)
     private String pwd;

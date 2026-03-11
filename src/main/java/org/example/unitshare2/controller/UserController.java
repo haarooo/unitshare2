@@ -1,11 +1,10 @@
 package org.example.unitshare2.controller;
 
 import org.example.unitshare2.dto.UserDto;
+import org.example.unitshare2.entity.UserEntity;
 import org.example.unitshare2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import unitshare.model.dto.UserDto;
 import unitshare.model.dao.UserDao;
 import unitshare.view.ProductView;
@@ -18,16 +17,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    // 01. 아이디 중복사용 여부 controller
-    public boolean checkId(String id) {
-        return ud.getInstance().checkId(id);
-    }
-
-    // 01-2. 전화번호 중복사용 여부 controller
-    public boolean checkphone(String phone) {
-        return ud.getInstance().checkPhone(phone);
-    }
 
 
     // 아이디찾기
@@ -46,12 +35,30 @@ public class UserController {
     }
     // 03 end // 0213
 
-    // 04. 회원가입 Controller
-    public boolean signup(String id, String pwd, String name, String phone) {
-        // [*] 유효성검사 (중복검사, 데이터 길이검사)
-        boolean result = ud.signup(id, pwd, name, phone);
+
+    // ******************************************* 소영  *****************************************
+    // 회원가입
+    @PostMapping("/join")
+    // { "id" : "so" , "pwd" : "soso" , "name" : "박소영" , "phone" : "01012345678" }
+    public boolean join(@RequestBody UserDto userDto) {
+        return userService.join(userDto);
+    }
+
+    // 아이디 중복 체크
+    @GetMapping("/checkid")
+    public boolean checkId(@RequestParam String id) {
+        boolean result = userService.checkId(id);
         return result;
-    } // 04 end
+    }
+
+    // 전화번호 중복 체크
+    @GetMapping("/checkphone")
+    public boolean checkPhone(@RequestParam String phone) {
+        boolean result = userService.checkPhone(phone);
+        return result;
+    }
+
+    // ***************************************************************************************
 
 
     // 로그인 메소드
