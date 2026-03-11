@@ -1,91 +1,44 @@
 package org.example.unitshare2.service;
 
 import org.example.unitshare2.dto.UserDto;
+import org.example.unitshare2.repository.UserRepository;
+import org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
 
-public class UserDao {
-    //싱글톤 생성
-    public UserDao() {connect();} // <--- 아!!!!!!!!!! ??? 객체가 생성될 때 DB 연동을 시작합니다.
+@Service
+public class UserService {
 
-    public static final UserDao instance = new UserDao();
-
-    public static UserDao getInstance() {
-        return instance;
-    }
-    private ArrayList<UserDto> UserDtos = new ArrayList<>();
-
-    //db연동
-    private String url = "jdbc:mysql://localhost:3306/unishare";
-    private String user = "root";
-    private String pw = "1234";
-    private Connection conn;
-
-    private void connect() { // conn 변수에 DB 연결 정보가 담김.
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection(url, user, pw);
-            System.out.println("연동성공");
-        } catch (Exception e) {
-            System.out.println("연동실패"+e);
-        }
-    }
+    @Autowired
+    private UserRepository userRepository;
 
 
 
-
-    // 01 end
-
-    // 02. 아이디찾기 Dao
-    public UserDto findId( String name, String phone ){
-        String sql ="select * from user where name = ? and phone = ?";
-        try(
-            PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, name);
-            ps.setString(2, phone);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    UserDto dto = new UserDto();
-                    dto.setUno(rs.getInt("uno"));
-                    dto.setId(rs.getString("id"));
-                    dto.setPwd(rs.getString("pwd"));
-                    dto.setPhone(rs.getString("phone"));
-                    dto.setName(rs.getString("name"));
-                    return dto;
-                }
+    public String findId( UserDto userDto ){
+            Optional<UserEntity> optionalName = userRepository.findById(userDto.getName());
+            Optional<UserEntity> optionalPhone = userRepository.findById(userDto.getPhone());
+            if(optionalName.isPresent() && optionalPhone.isPresent()){
+                Optional<UserEntity> findId = userRepository.findById(userDto.getId());
+                return findId.get().toDto();
             }
-        }catch (Exception e){e.printStackTrace();}
-        return null;
         }
     // 02 end // 0213 수정
 
     // 03. 비밀번호 찾기 Dao
-    public UserDto findPwd( String id, String phone ){
-        String sql ="select * from user where id = ? and phone = ?";
-        try(
-            PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, id);
-            ps.setString(2, phone);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    UserDto dto = new UserDto();
-                    dto.setUno(rs.getInt("uno"));
-                    dto.setId(rs.getString("id"));
-                    dto.setPwd(rs.getString("pwd"));
-                    dto.setPhone(rs.getString("phone"));
-                    dto.setName(rs.getString("name"));
-                    return dto;
-                }
-            }
-        }catch (Exception e){
-            System.out.println("[경고]비밀번호 찾기 오류" + e);}
-        return null;
+    public String findPwd(UserDto userDto){
+        userRepository.findById(userDto.get);
     }
-    // 03 end // 0213 수정
 
+    // 비밀번호 변경
+    public boolean changePwd(UserDto userDto){
+
+
+    }
     // 04. 회원가입 Dao
     private int currentUno = 1; // 0211 수정
     public boolean signup(String id, String pwd, String name, String phone ) {
@@ -148,30 +101,7 @@ public class UserDao {
 
     } // m END
 
-    // 비밀번호 변경
-    public boolean newPwd(int uno, String currentPwd,String newPwd){
-        try {
-            String sql = "UPDATE user SET pwd = ? WHERE uno = ? AND pwd =?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1,newPwd);
-            ps.setInt(2,uno);
-            ps.setString(3,currentPwd);
 
-            int result = ps.executeUpdate();
-
-            if(result > 0){
-                System.out.println("[안내] 비밀번호 변경 성공!");
-                return true;
-            } else{
-                System.out.println("[경고] 현재 비밀번호가 틀렸거나 변경에 실패하였습니다.");
-                return false;
-            }
-
-        }catch (Exception e){
-            System.out.println("[경고] 비밀번호 변경 도중 에러 발생 : " + e);
-        }
-        return false;
-    }
 
     // 휴면계정 전환 // 0223 추가
     public boolean loginStatement(int uno){
