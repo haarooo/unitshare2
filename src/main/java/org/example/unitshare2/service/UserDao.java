@@ -138,11 +138,8 @@ public class UserDao {
 
             ResultSet rs = ps.executeQuery(); // 쿼리 실행 결과 받기
 
-            if (rs.next()) {
-                return rs.getInt("uno");
-            }
-        }catch (Exception e){
-            System.out.println("[경고] 로그인 처리 중 에러 : " + e);
+            if (rs.next()) {return rs.getInt("uno");}
+        }catch (Exception e){            System.out.println("[경고] 로그인 처리 중 에러 : " + e);
         }
         return 0;
 
@@ -192,9 +189,7 @@ public class UserDao {
 
 
     public int pointAdd(int point , int uno , String pwd){
-        try{
-
-            String sql1 = "update user set point = point + ? where uno = ? and pwd = ?";
+        try{            String sql1 = "update user set point = point + ? where uno = ? and pwd = ?";
             PreparedStatement ps1 = conn.prepareStatement(sql1);
             ps1.setInt(1 , point);
             ps1.setInt(2, uno);
