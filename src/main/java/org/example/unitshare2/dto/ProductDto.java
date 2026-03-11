@@ -1,5 +1,7 @@
 package org.example.unitshare2.dto;
 
+
+
 public class ProductDto {
 
     private int pno;
