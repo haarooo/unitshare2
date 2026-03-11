@@ -1,16 +1,14 @@
 package org.example.unitshare2.controller;
 
 import org.example.unitshare2.dto.UserDto;
+import org.example.unitshare2.entity.UserEntity;
 import org.example.unitshare2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import unitshare.model.dto.UserDto;
-import unitshare.model.dao.UserDao;
-import unitshare.view.ProductView;
-import unitshare2.view.UserView;
+import org.springframework.web.bind.annotation.*;
 
+
+import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 @RestController
@@ -18,6 +16,31 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    // 아이디찾기
+    @PostMapping("/hb")
+    public String findId(@RequestBody Map<String , Object> map) {
+        String result = userService.findId(map);
+        return result;
+    }
+
+    // 비밀번호찾기
+    @PostMapping("/hb")
+    public String findPwd(@RequestBody UserDto userDto) {
+        String result = userService.findPwd(userDto);
+        return result;
+    }
+
+
+    // 비밀번호 변경 페이지
+    @PutMapping("/hb")
+    public boolean newPwd(@RequestBody UserDto userDto) {
+        boolean result = userService.newPwd(userDto);
+        return result;
+
+    } // m END
+
+
 
     // 01. 아이디 중복사용 여부 controller
     public boolean checkId(String id) {
@@ -30,20 +53,13 @@ public class UserController {
     }
 
 
-    // 아이디찾기
-    @GetMapping("/hb")
-    public String findId(@RequestBody UserDto userDto) {
-        String result = userService.findId(userDto);
-        return result;
-    }
+
 
     // 02 end // 0213
 
-    // 비밀번호찾기
-    public String findPwd(@RequestBody UserDto userDto) {
-        String result = userService.findPwd(userDto);
-        return result;
-    }
+
+
+
     // 03 end // 0213
 
     // 04. 회원가입 Controller
@@ -96,21 +112,7 @@ public class UserController {
         this.ud = ud;
     }
 
-    // 비밀번호 변경 페이지
-    public boolean newPwd(String currentPwd, String newPwd) {
-        if (loginSession == 0) {
-            System.out.println("[경고] 로그인이 필요한 서비스입니다.");
-            return false;
-        }
-        // 현재 비밀번호, 새로운 비밀번호 같은지 체크
-        if (currentPwd.equals(newPwd)) {
-            System.out.println("[경고] 현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.");
-            return false;
-        }
-        // DAO 호출, 전달받은 데이터와 현재 로그인 세션번호를 넘김
-        boolean result = userDao.newPwd(this.loginSession, currentPwd, newPwd);
-        return result;
-    } // m END
+
 
     public int pointAdd(int point , String pwd){
         int uno = getLoginSession();
@@ -125,6 +127,8 @@ public class UserController {
         if (this.timerThread.state == false) {      // 3. [상태 확인] 이미 7초가 지나서 스레드가 state를 false로 바꿨는지 확인
             return true; }// 7초 지남! (View에서 return 하도록 true 반환)
           return false;} // 아직 시간 남음! (View에서 계속 진행)
+
+
 }
 
 

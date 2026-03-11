@@ -1,6 +1,7 @@
 package org.example.unitshare2.service;
 
 import org.example.unitshare2.dto.UserDto;
+import org.example.unitshare2.entity.UserEntity;
 import org.example.unitshare2.repository.UserRepository;
 import org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -17,23 +21,33 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-
-
-    public String findId( UserDto userDto ){
-            Optional<UserEntity> optionalName = userRepository.findById(userDto.getName());
-            Optional<UserEntity> optionalPhone = userRepository.findById(userDto.getPhone());
-            if(optionalName.isPresent() && optionalPhone.isPresent()){
-                Optional<UserEntity> findId = userRepository.findById(userDto.getId());
-                return findId.get().toDto();
+    // 아이디 찾기
+    public String findId(Map<String , Object> map){
+            List<UserEntity> userList = userRepository.findAll();
+            for(UserEntity user : userList){
+                if(user.getName().equals(map.get("name"))&&user.getPhone().equals(map.get("phone"))){
+                    return user.getId();
+                }
             }
-        }
-    // 02 end // 0213 수정
-
-    // 03. 비밀번호 찾기 Dao
-    public String findPwd(UserDto userDto){
-        userRepository.findById(userDto.get);
+            return null;
     }
 
+    // 비밀번호 찾기
+    public String findPwd(UserDto userDto){
+        List<UserEntity> userList = userRepository.findAll();
+        for(UserEntity user : userList){
+            if(user.getId().equals(userDto.getId())&&user.getPhone().equals(userDto.getPhone())){
+                return user.getPwd();
+            }
+        }
+        return null;
+    }
+
+
+
+
+
+/*
     // 비밀번호 변경
     public boolean changePwd(UserDto userDto){
 
@@ -131,4 +145,6 @@ public class UserService {
         }catch (SQLException e){System.out.println(" 포인트 sql오류 ");}
         return 0;
     }
+
+ */
 } // class END

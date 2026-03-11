@@ -1,5 +1,5 @@
 package org.example.unitshare2.controller;
-
+/*
 public class TimerThread extends Thread {
         public boolean state = false;
         String id;
@@ -33,3 +33,5 @@ public class TimerThread extends Thread {
             }// while end
         } // method(run) end
 } // Thread class end
+
+ */

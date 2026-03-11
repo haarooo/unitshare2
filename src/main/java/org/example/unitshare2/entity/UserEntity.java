@@ -18,7 +18,6 @@ public class UserEntity extends BaseTime{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer uno; //유저번호 PK
 
-
     @Column(nullable = false,unique = true,length = 20)
     private String id; //유저아이디
 
@@ -32,7 +31,7 @@ public class UserEntity extends BaseTime{
     @Column(length = 10,nullable = false,unique = true)
     private String name; //유저이름
 
-    @Column(columnDefinition = "default 0")
+    @Column(columnDefinition = "int default 0")
     private Integer point;  //유저 포인트
 
     @Column(columnDefinition = "tinyint default 0")
