@@ -1,5 +1,11 @@
 package org.example.unitshare2.controller;
 
+import org.example.unitshare2.dto.UserDto;
+import org.example.unitshare2.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import unitshare.model.dto.UserDto;
 import unitshare.model.dao.UserDao;
 import unitshare.view.ProductView;
@@ -7,22 +13,11 @@ import unitshare.view.UserView;
 
 import java.util.Scanner;
 
+@RestController
 public class UserController {
-    UserDao userDao = new UserDao();
 
-    // 싱글톤 생성
-    private UserController() {
-    }
-
-    private static final UserController instance = new UserController();
-
-    public static UserController getInstance() {
-        return instance;
-    }
-
-
-    private UserDao ud = UserDao.getInstance();
-
+    @Autowired
+    private UserService userService;
 
     // 01. 아이디 중복사용 여부 controller
     public boolean checkId(String id) {
@@ -34,23 +29,20 @@ public class UserController {
         return ud.getInstance().checkPhone(phone);
     }
 
-    // 02.아이디찾기
-    public String findId(String name, String phone) {
-        UserDto dto = ud.findId(name, phone);
-        if (dto != null) {
-            return dto.getId();
-        }
-        return null;
+
+    // 아이디찾기
+    @GetMapping("/hb")
+    public String findId(@RequestBody UserDto userDto) {
+        String result = userService.findId(userDto);
+        return result;
     }
+
     // 02 end // 0213
 
-    // 03.비밀번호찾기
-    public String findPwd(String id, String phone) {
-        UserDto dto = ud.findPwd(id, phone);
-        if (dto != null) {
-            return dto.getPwd();
-        }
-        return null;
+    // 비밀번호찾기
+    public String findPwd(@RequestBody UserDto userDto) {
+        String result = userService.findPwd(userDto);
+        return result;
     }
     // 03 end // 0213
 
