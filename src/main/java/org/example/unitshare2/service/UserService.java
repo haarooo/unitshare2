@@ -35,8 +35,9 @@ public class UserService {
     // 로그인 일정 시간 지나면 자동 로그아웃(휴면계정 전환) Service 스프링
     public boolean loginStatement(int uno){
         Optional<UserEntity> optionalUserEntity = userRepository.findById(uno);
-
+        return true;
     }
+    return false;
 }
 
 //    public String findId( UserDto userDto ){

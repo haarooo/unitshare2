@@ -21,7 +21,6 @@ public class LoginStateEnitty extends BaseTime{
     @Column(columnDefinition = "tinyint default 0")
     private Integer userState;
 
-
     @JoinColumn(name = "uno")
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<UserEntity> userEntityList;
