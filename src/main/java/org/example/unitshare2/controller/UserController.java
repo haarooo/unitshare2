@@ -3,7 +3,7 @@ package org.example.unitshare2.controller;
 import unitshare.model.dto.UserDto;
 import unitshare.model.dao.UserDao;
 import unitshare.view.ProductView;
-import unitshare.view.UserView;
+import unitshare2.view.UserView;
 
 import java.util.Scanner;
 
