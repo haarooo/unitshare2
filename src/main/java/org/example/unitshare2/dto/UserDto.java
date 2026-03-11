@@ -26,7 +26,7 @@ public class UserDto {
    public UserEntity toEntity(){
       return UserEntity.builder()
               .uno(uno)
-              .Id(id)
+              .id(id)
               .pwd(pwd)
               .phone(phone)
               .name(name)
