@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,6 +37,9 @@ public class ProductEntity extends BaseTime{
     private Integer people;
 
 
+    @JoinColumn(name = "uno")
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    //유저가 삭제되면 프로덕트 테이블도 자동 삭제/수정
 
-    private Integer uno; //fk
+    private UserEntity userEntity;  //유저번호 FK //유저하나당 여러개의 상품을 가진다.
 }
