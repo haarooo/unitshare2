@@ -29,7 +29,7 @@ public class ParticipantEntity extends BaseTime {
 
 
     @JoinColumn(name ="uno")
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private UserEntity userEntity;
 
 }
