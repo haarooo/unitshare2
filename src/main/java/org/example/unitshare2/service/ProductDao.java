@@ -1,6 +1,5 @@
 package org.example.unitshare2.service;
 
-import unitshare.controller.ProductController;
 import org.example.unitshare2.dto.ProductDto;
 
 import java.sql.*;
