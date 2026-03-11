@@ -23,6 +23,6 @@ public class LoginStateEnitty extends BaseTime{
 
 
     @JoinColumn(name = "uno")
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<UserEntity> userEntityList;
 }
